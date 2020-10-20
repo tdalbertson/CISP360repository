@@ -27,20 +27,51 @@ Pseudocode:
 #include <iostream>
 #include <string>
 #include <iomanip>
+#include <vector>
 
 using namespace std;
 
 
 // ========== Function Prototypes ==========
 void displayMessage();
+void getTestAnswers(char [], int size);
+bool checkAnswer(char []);
 
 
+// ========== Main Program ==========
 int main () {
+    const int test_size = 20;
+    const char ANSWER_KEY[test_size] = {'A', 'D', 'B', 'B', 'C', 'B', 'A', 'B', 'C', 'D',
+                                        'A', 'C', 'D', 'B', 'D', 'C', 'C', 'A', 'D', 'B'};
+    char student_answers[test_size];
+    std::vector <char> incorrect_answers;
+
+    displayMessage();
+    getTestAnswers(student_answers, test_size);
 
 
     return 0;
 }
 
+// ========== Function Definitions ==========
+
 void displayMessage() {
-    std::cout << "This program is for" << std::endl;
+    std::cout << "This program is for checking the test answers for the Driver's License Office's Exam." << std::endl;
+    std::cout << "The passing requirement is at least 15/20 questions." << std::endl;
+    std::cout << "Please enter A, B, C, or D for the answer." << std::endl;
+}
+
+void getTestAnswers(char stu_test_answers[], int size) {
+    for (int i = 0; i < size; i++) {
+        cout << "Please enter the student's answer for question " << (i + 1) << ": ";
+        cin >> stu_test_answers[i];
+
+    }
+}
+
+void checkAnswer(char stu_test_answer) {
+    if stu_test_answer != 'A' || stu_test_answer != 'B' || stu_test_answer != 'C' || stu_test_answer != 'D' {
+        std::cout << "Please enter a valid test answer (A, B, C, or D)" << std::endl;
+        
+    }
 }
