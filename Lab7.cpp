@@ -25,9 +25,9 @@ Pseudocode:
 */
 
 #include <iostream>
-#include <string>
 #include <iomanip>
 #include <vector>
+#include <cctype>
 
 using namespace std;
 
@@ -35,7 +35,8 @@ using namespace std;
 // ========== Function Prototypes ==========
 void displayMessage();
 void getTestAnswers(char [], int size);
-bool checkAnswer(char []);
+bool checkAnswer(char answer);
+int compareAnswers(const char test_answers[], char student_answers[], int size, vector<int> &incorrect_answers);
 
 
 // ========== Main Program ==========
@@ -43,12 +44,19 @@ int main () {
     const int test_size = 20;
     const char ANSWER_KEY[test_size] = {'A', 'D', 'B', 'B', 'C', 'B', 'A', 'B', 'C', 'D',
                                         'A', 'C', 'D', 'B', 'D', 'C', 'C', 'A', 'D', 'B'};
-    char student_answers[test_size];
-    std::vector <char> incorrect_answers;
+    char student_answers[test_size]; // For storing student answers
+    std::vector<int> &incorrect_answers; // For storing incorrectly answered questions
+    int num_wrong_answer; // For counting total number of wrong answers
 
+    // Display program explanation
     displayMessage();
+
+    // Get student answers
     getTestAnswers(student_answers, test_size);
 
+    // Compare student test answers to answer key
+    num_wrong_answer = compareAnswers(ANSWER_KEY, student_answers, test_size, &incorrect_answers);
+    std::cout << num_wrong_answer << std::endl;
 
     return 0;
 }
@@ -62,16 +70,51 @@ void displayMessage() {
 }
 
 void getTestAnswers(char stu_test_answers[], int size) {
+    bool is_answer = true;
+
     for (int i = 0; i < size; i++) {
-        cout << "Please enter the student's answer for question " << (i + 1) << ": ";
-        cin >> stu_test_answers[i];
-
+        do {
+            cout << "Please enter the student's answer for question " << (i + 1) << ": ";
+            cin >> stu_test_answers[i];
+            stu_test_answers[i] = toupper(stu_test_answers[i]);
+            is_answer = checkAnswer(stu_test_answers[i]); // Input validation
+        } while (is_answer == false); // While is not an answer
     }
 }
 
-void checkAnswer(char stu_test_answer) {
-    if stu_test_answer != 'A' || stu_test_answer != 'B' || stu_test_answer != 'C' || stu_test_answer != 'D' {
-        std::cout << "Please enter a valid test answer (A, B, C, or D)" << std::endl;
-        
+bool checkAnswer(char answer) {
+    switch (answer){
+        case 'A':
+            system("clear");
+            return true;
+        case 'B':
+            system("clear");
+            return true;
+        case 'C':
+            system("clear");
+            return true;
+        case 'D':
+            system("clear");
+            return true;
+        default:
+            system("clear");
+            std::cout << "Please enter a valid test answer (A, B, C, or D)" << std::endl;
+            cin.clear();
+            cin.ignore(100, '\n');
+            return false;
     }
 }
+
+int compareAnswers(const char test_answers[], char student_answers[], int size, vector <int> &incorrect_answers) {
+    int num_wrong;
+
+    for (int i = 0; i < size; i++) {
+        if (student_answers[i] != test_answers[i]) {
+            incorrect_answers.push_back(i + 1); // **ERROR HERE** error: declaration of reference variable 'incorrect_answers' requires an initializer
+            num_wrong++; // Increase counter for number of incorrect answers
+        }
+    }
+
+    return num_wrong;
+}
+
