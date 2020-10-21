@@ -36,7 +36,7 @@ using namespace std;
 void displayMessage();
 void getTestAnswers(char [], int size);
 bool checkAnswer(char answer);
-int compareAnswers(const char test_answers[], char student_answers[], int size, vector<int> &incorrect_answers);
+int compareAnswers(const char test_answers[], char student_answers[], int size, vector<int> incorrect_answers);
 
 
 // ========== Main Program ==========
@@ -45,7 +45,7 @@ int main () {
     const char ANSWER_KEY[test_size] = {'A', 'D', 'B', 'B', 'C', 'B', 'A', 'B', 'C', 'D',
                                         'A', 'C', 'D', 'B', 'D', 'C', 'C', 'A', 'D', 'B'};
     char student_answers[test_size]; // For storing student answers
-    std::vector<int> &incorrect_answers; // For storing incorrectly answered questions
+    std::vector<int> incorrect_answers; // For storing incorrectly answered questions
     int num_wrong_answer; // For counting total number of wrong answers
 
     // Display program explanation
@@ -55,8 +55,10 @@ int main () {
     getTestAnswers(student_answers, test_size);
 
     // Compare student test answers to answer key
-    num_wrong_answer = compareAnswers(ANSWER_KEY, student_answers, test_size, &incorrect_answers);
+    num_wrong_answer = compareAnswers(ANSWER_KEY, student_answers, test_size, incorrect_answers);
     std::cout << num_wrong_answer << std::endl;
+
+    // Display results
 
     return 0;
 }
@@ -105,12 +107,12 @@ bool checkAnswer(char answer) {
     }
 }
 
-int compareAnswers(const char test_answers[], char student_answers[], int size, vector <int> &incorrect_answers) {
+int compareAnswers(const char test_answers[], char student_answers[], int size, vector <int> incorrect_answers) {
     int num_wrong;
 
     for (int i = 0; i < size; i++) {
         if (student_answers[i] != test_answers[i]) {
-            incorrect_answers.push_back(i + 1); // **ERROR HERE** error: declaration of reference variable 'incorrect_answers' requires an initializer
+            incorrect_answers.push_back(i + 1); // Add the incorrect problem to the list
             num_wrong++; // Increase counter for number of incorrect answers
         }
     }
