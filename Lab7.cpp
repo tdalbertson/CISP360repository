@@ -27,6 +27,7 @@ Pseudocode:
 #include <cctype>
 #include <iomanip>
 #include <iostream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -35,8 +36,8 @@ using namespace std;
 void displayMessage();
 void getTestAnswers(char [], int size);
 bool checkAnswer(char answer);
-int compareAnswers(const char test_answers[], char student_answers[], vector<int> incorrect_answers);
-void displayResults();
+int compareAnswers(const char test_answers[], char student_answers[], int size, vector<int> incorrect_answers);
+void displayResults(const char test_answers[], char student_answers[], int size, vector<int> incorrect_answers, int wrong_answer_num);
 
 // ========== Main Program ==========
 int main () {
@@ -47,10 +48,6 @@ int main () {
     std::vector<int> incorrect_answers; // For storing incorrectly answered questions
     int num_wrong_answer; // For counting total number of wrong answers
 
-    for (int i; i < TEST_SIZE; i++) {
-        std::cout << ANSWER_KEY[i] << std::endl;
-    }
-
     // Display program explanation
     displayMessage();
 
@@ -58,15 +55,10 @@ int main () {
     getTestAnswers(student_answers, TEST_SIZE);
 
     // Compare student test answers to answer key
-    num_wrong_answer = compareAnswers(ANSWER_KEY, student_answers, incorrect_answers);
-    std::cout << num_wrong_answer << std::endl;
-    int x = sizeof(incorrect_answers);
-    for (int i; i < x; i++){
-        std::cout << incorrect_answers[i] << std::endl;
-    }
+    num_wrong_answer = compareAnswers(ANSWER_KEY, student_answers, TEST_SIZE, incorrect_answers);
 
     // Display results
-
+    displayResults(ANSWER_KEY, student_answers, TEST_SIZE, incorrect_answers, num_wrong_answer);
 
     return 0;
 }
@@ -88,7 +80,7 @@ void getTestAnswers(char stu_test_answers[], int size) {
             cin >> stu_test_answers[i];
             stu_test_answers[i] = toupper(stu_test_answers[i]);
             is_answer = checkAnswer(stu_test_answers[i]); // Input validation
-        } while (is_answer == false); // While is not an answer
+        } while (is_answer == false); // While not an answer
     }
 }
 
@@ -115,25 +107,33 @@ bool checkAnswer(char answer) {
     }
 }
 
-int compareAnswers(const char test_answers[], char student_answers[], vector <int> incorrect_answers) {
+int compareAnswers(const char test_answers[], char student_answers[], int size, vector<int> incorrect_answers) {
     int num_wrong = 0;
-    int test_size = sizeof(test_answers[0]);
 
-    for (int i; i < test_size; i++) {
-        std::cout << test_answers[i] << std::endl;
-    }
-
-    for (int i = 0; i < test_size; i++) {
+    for (int i = 0; i < size; i++) {
         if (student_answers[i] != test_answers[i]) {
-            std::cout << student_answers[i] << ' ' << test_answers[i] << std::endl;
-            incorrect_answers.push_back(i + 1); // Add the incorrect problem to the list
+            incorrect_answers.push_back(test_answers[i]); // Add the incorrect problem to the list
             num_wrong++; // Increase counter for number of incorrect answers
         }
     }
-    std::cout << num_wrong << std::endl;
+
     return num_wrong;
 }
 
-void displayResults() {
-
+void displayResults(const char test_answers[], char student_answers[], int size, vector<int> incorrect_answers, int wrong_answer_num) {
+    std::cout << "Test Answers   Student Answers" << std::endl;
+    std::cout << "------------------------------" << std::endl;
+    for (int i = 0; i < size; i++) {
+        std::cout << setw(6) << test_answers[i] << "\t\t\t" << student_answers[i] << std::endl;
+    }
+    std::cout << sizeof(incorrect_answers) << std::endl;;
+    for (int i = 0; i > sizeof(incorrect_answers); i++) {
+        std::cout << "Number of incorrect answers: " << incorrect_answers[i] << std::endl;
+    }
+    if (wrong_answer_num >= 15) {
+        std::cout << "The student passed the test." << std::endl;
+    }
+    else {
+        std::cout << "The student failed the test." << std::endl;
+    }
 }
